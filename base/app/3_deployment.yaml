@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: principal-app
+  namespace: core-application
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: principal-app
+  template:
+    metadata:
+      labels:
+        app: principal-app
+    spec:
+      containers:
+      - name: principal-app
+        securityContext:
+          privileged: true
+        image: python:3.9-slim
+        command: ["sh", "-c", "pip install faker && python /scripts/log_generator.py"]
+        env:
+        - name: LOG_INTERVAL
+          value: "2"  # Time interval between logs (in seconds)
+        - name: LOG_COUNT
+          value: "5"  # Number of logs to generate per interval
+        volumeMounts:
+        - name: script-volume
+          mountPath: /scripts
+      volumes:
+      - name: script-volume
+        configMap:
+          name: principal-app-script

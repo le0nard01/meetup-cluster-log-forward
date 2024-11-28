@@ -1,0 +1,31 @@
+apiVersion: kibana.k8s.elastic.co/v1
+kind: Kibana
+metadata:
+  name: kibana
+  namespace: elastic-eck
+spec:
+  version: 8.16.1
+  count: 1
+  elasticsearchRef:
+    name: "elasticsearch"
+  podTemplate:
+    spec:
+      containers:
+      - name: kibana
+        resources:
+          limits:
+            memory: 1Gi
+            cpu: 1
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: kibana
+  namespace: elastic-eck
+spec:
+  tls:
+    termination: passthrough
+    insecureEdgeTerminationPolicy: Redirect
+  to:
+    kind: Service
+    name: kibana-kb-http
