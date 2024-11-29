@@ -1,0 +1,42 @@
+apiVersion: logging.openshift.io/v1
+kind: ClusterLogForwarder
+metadata:
+  name: forwarding
+  namespace: openshift-logging # ClusterLogging Version 5.9.9
+spec:
+
+  filters: # Filtrando os Logs antes de enviar
+  - name: only-error
+    type: drop 
+    drop: # Remove os logs baseado no filtro
+    - test:
+        - field: ".structured.level"
+          notMatches: "ERROR" # Tudo que NÃO for level=ERROR
+
+  inputs:
+    - application:
+        namespaces:
+          - core-application
+      name: my-app-logs
+
+  outputs:
+    - elasticsearch:
+        version: 8
+        structuredTypeKey: kubernetes.labels.logFormat 
+      name: elasticsearch-external
+      secret:
+        name: elastic-secret
+      type: elasticsearch
+      url: 'http://elasticsearch-es-http.elastic-eck.svc:9200/'
+
+  pipelines:
+    - inputRefs:
+        - my-app-logs
+      name: application-logs
+      outputRefs:
+        - elasticsearch-external
+      parse: json 
+      filterRefs: # Referência do Filtro
+        - only-error
+
+  serviceAccountName: cluster-logging-operator

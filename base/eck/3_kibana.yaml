@@ -6,6 +6,10 @@ metadata:
 spec:
   version: 8.16.1
   count: 1
+  http:
+    tls:
+      selfSignedCertificate:
+        disabled: true
   elasticsearchRef:
     name: "elasticsearch"
   podTemplate:
@@ -23,8 +27,9 @@ metadata:
   name: kibana
   namespace: elastic-eck
 spec:
+  host: kibana.apps.cluster-c9fhm.c9fhm.sandbox1746.opentlc.com
   tls:
-    termination: passthrough
+    termination: edge
     insecureEdgeTerminationPolicy: Redirect
   to:
     kind: Service

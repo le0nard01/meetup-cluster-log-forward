@@ -4,6 +4,10 @@ metadata:
   name: elasticsearch
   namespace: elastic-eck
 spec:
+  http:
+    tls:
+      selfSignedCertificate:
+        disabled: true
   version: 8.16.1
   nodeSets:
   - name: default

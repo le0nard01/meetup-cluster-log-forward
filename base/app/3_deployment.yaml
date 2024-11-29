@@ -12,6 +12,7 @@ spec:
     metadata:
       labels:
         app: principal-app
+        logFormat: json
     spec:
       containers:
       - name: principal-app

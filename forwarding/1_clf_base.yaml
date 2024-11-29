@@ -1,0 +1,29 @@
+apiVersion: logging.openshift.io/v1
+kind: ClusterLogForwarder
+metadata:
+  name: forwarding
+  namespace: openshift-logging # ClusterLogging Version 5.9.9
+spec:
+  inputs: # Definições das origens dos logs
+    - application:
+        namespaces:
+          - core-application # Opcional: Namespaces das aplicações que quero exportar
+      name: my-app-logs
+
+  outputs: # Definições dos destinos dos logs 
+    - elasticsearch:
+        version: 8
+      name: elasticsearch-external
+      secret:
+        name: elastic-secret
+      type: elasticsearch
+      url: 'http://elasticsearch-es-http.elastic-eck.svc:9200/'
+      
+  pipelines: # Junção entre as definições de origem e qual o destino
+    - inputRefs:
+        - my-app-logs
+      name: application-logs
+      outputRefs:
+        - elasticsearch-external
+
+  serviceAccountName: cluster-logging-operator 
