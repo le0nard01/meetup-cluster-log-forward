@@ -4,13 +4,13 @@ metadata:
   name: forwarding
   namespace: openshift-logging # ClusterLogging Version 5.9.9
 spec:
-  inputs: # Definições das origens dos logs
+  inputs: 
     - application:
         namespaces:
-          - core-application # Opcional: Namespaces das aplicações que quero exportar
+          - core-application
       name: my-app-logs
 
-  outputs: # Definições dos destinos dos logs 
+  outputs:
     - elasticsearch:
         version: 8
       name: elasticsearch-external
@@ -19,7 +19,7 @@ spec:
       type: elasticsearch
       url: 'http://elasticsearch-es-http.elastic-eck.svc:9200/'
       
-  pipelines: # Junção entre as definições de origem e qual o destino
+  pipelines:
     - inputRefs:
         - my-app-logs
       name: application-logs

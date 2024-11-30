@@ -13,7 +13,7 @@ spec:
   outputs:
     - elasticsearch:
         version: 8
-        structuredTypeKey: kubernetes.labels.logFormat # Label logFormat será utilizada para identificar o Schema
+        structuredTypeKey: kubernetes.labels.logFormat
       name: elasticsearch-external
       secret:
         name: elastic-secret
@@ -26,6 +26,6 @@ spec:
       name: application-logs
       outputRefs:
         - elasticsearch-external
-      parse: json # Parse dos logs em JSON
+      parse: json
 
   serviceAccountName: cluster-logging-operator
